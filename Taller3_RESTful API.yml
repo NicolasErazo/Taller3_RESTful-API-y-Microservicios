@@ -121,7 +121,7 @@ paths:
         500:
           $ref: '#/components/responses/ServerError'
           
-  /{idCliente}/beneficiarios:
+  /usuarios?={idCliente}/beneficiarios:
     get:
       tags:
       - usuarios
