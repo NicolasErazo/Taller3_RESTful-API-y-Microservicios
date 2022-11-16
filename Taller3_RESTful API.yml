@@ -125,7 +125,7 @@ paths:
     get:
       tags:
       - usuarios
-      summary: Consulta beneficiarios por Usuario
+      summary: Consulta beneficiarios por Usuario.
       parameters:
       - name: idCliente
         in: path
@@ -152,11 +152,42 @@ paths:
         500:
           $ref: '#/components/responses/ServerError'
           
-  /{idCliente}/{idCuenta}:
+  /usuarios?={idCliente}/cuenta:
     get:
       tags:
       - usuarios
-      summary: Obtiene informacion de los Usuarios
+      summary: Obtiene informacion del saldo de Usuario.
+      parameters:
+      - name: idCliente
+        in: path
+        description: Identificador del cliente a obtener
+        required: true
+        schema:
+          type: string
+      security: 
+        - OAuth2: [admin]   # Use OAuth with a different scope
+      responses:
+        200:
+          description: (OK) El saldo del Usuario se obtuvo correctamente
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ExitoSaldoGet'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+
+  /usuarios?={idCliente}/cuenta?={idCuenta}:
+    post:
+      tags:
+      - usuarios
+      summary: Realiza retiro de saldo del Usuario.
       parameters:
       - name: idCliente
         in: path
@@ -173,12 +204,8 @@ paths:
       security: 
         - OAuth2: [admin]   # Use OAuth with a different scope
       responses:
-        200:
-          description: (OK) La informacion del cliente se obtuvo correctamente
-          content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ExitoSaldoGet'
+        201:
+          description: (Created) El retiro se realizo correctamente
 
         400:
           $ref: '#/components/responses/BadRequest'
