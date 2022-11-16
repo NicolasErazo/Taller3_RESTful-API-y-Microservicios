@@ -205,7 +205,10 @@ paths:
       responses:
         201:
           description: (Created) El retiro se realizo correctamente
-
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoUsuariosGet'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
