@@ -121,7 +121,7 @@ paths:
         500:
           $ref: '#/components/responses/ServerError'
           
-  /{idCliente}:
+  /{idCliente}/beneficiarios:
     get:
       tags:
       - usuarios
@@ -152,7 +152,7 @@ paths:
         500:
           $ref: '#/components/responses/ServerError'
           
-  /{idCliente}/saldo:
+  /{idCliente}/{idCuenta}:
     get:
       tags:
       - usuarios
@@ -161,6 +161,12 @@ paths:
       - name: idCliente
         in: path
         description: Identificador del cliente a obtener
+        required: true
+        schema:
+          type: string
+      - name: idCuenta
+        in: path
+        description: Identificador de la cuenta a obtener
         required: true
         schema:
           type: string
