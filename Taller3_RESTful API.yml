@@ -120,7 +120,7 @@ paths:
         500:
           $ref: '#/components/responses/ServerError'
           
-  /usuarios?={idCliente}/beneficiarios:
+  /usuarios/{idCliente}/beneficiarios:
     get:
       tags:
       - usuarios
@@ -151,7 +151,7 @@ paths:
         500:
           $ref: '#/components/responses/ServerError'
           
-  /usuarios?={idCliente}/cuenta:
+  /usuarios/{idCliente}/cuenta:
     get:
       tags:
       - usuarios
@@ -182,7 +182,7 @@ paths:
         500:
           $ref: '#/components/responses/ServerError'
 
-  /usuarios?={idCliente}/cuenta?={idCuenta}:
+  /usuarios/{idCliente}/cuenta/{idCuenta}:
     post:
       tags:
       - usuarios
