@@ -1,0 +1,184 @@
+openapi: 3.0.3
+
+info:
+  title: API NicolasErazo.
+  description: Esta API se encarga de... <br /> 1. Consultar Saldo de una Cuenta <br /> 2. Consultar Beneficiarios por Usuario.<br /> 3. Retirar un monto de una Cuenta.<br /> 4. Consultar Usuarios.
+  version: 1.0.0
+  
+servers:
+- url: 'https://api.nicolaserazo/v1/usuarios'
+    
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          tokenUrl: https://example.com/oauth/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+            admin: Grants access to admin operations
+            
+  responses:
+    
+    Unauthorized:
+      description: (Unauthorized) No hay autorizacion para llamar al servicio
+    
+    NotFound:
+      description: (NotFound) No se encontro informacion
+    
+    BadRequest:
+      description: (Bad Request) Los datos enviados son incorrectos o hay datos obligatorios no enviados
+      
+    ServerError:
+      description: Error en servidor
+      
+  schemas:
+    ExitoUsuariosGet:
+      type: object
+      properties:
+        respuesta:
+          type: integer
+          enum: [1]
+          description: Bandera que nos dice si la llamada al servicio fue satisfactoria.
+        nombre_completo:
+          type: string
+          description: Nombre del Usuario.
+        correo_electronico:
+          type: string
+          description: Email del cliente.
+        banco_asignado:
+          type: string
+          description: Banco al que se encuentra Afiliado el Usuario.
+          
+    ExitoBeneficiariosGet:      
+      type: object
+      properties:
+        respuesta:
+          type: integer
+          enum: [1]
+          description: Bandera que nos dice si la llamada al servicio fue satisfactoria.
+        nombre_completo:
+          type: string
+          description: Nombre del Usuario.
+        numero_cedula:
+          type: integer
+          description: Numero de Identidicacion. 
+        correo_electronico:
+          type: string
+          description: Email del cliente.
+        ciudad_residencia:
+          type: string
+          description: Ciudad de residencia.
+        banco_asignado:
+          type: string
+          description: Banco al que se encuentra Afiliado el Usuario. 
+          
+    ExitoSaldoGet:
+      type: object
+      properties:
+        respuesta:
+          type: integer
+          enum: [1]
+          description: Bandera que nos dice si la llamada al servicio fue satisfactoria.
+        saldo:
+          type: integer
+          description: Saldo Total. 
+        
+security:
+  - OAuth2:
+      - read
+      - write    
+
+
+tags:
+  - name: usuarios
+    description: Este endpoint maneja toda la informacion relacionada con la informacion de los Usuarios.
+    
+paths:
+  /:
+    get:
+      tags:
+      - usuarios
+      summary: Obtiene informacion de los Usuarios
+      security: []   # No security
+      responses:
+        200:
+          description: (OK) La informacion del cliente se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoUsuariosGet'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /{idCliente}:
+    get:
+      tags:
+      - usuarios
+      summary: Consulta beneficiarios por Usuario
+      parameters:
+      - name: idCliente
+        in: path
+        description: Identificador del cliente a obtener
+        required: true
+        schema:
+          type: string
+      security:
+        - OAuth2: [admin]   # Use OAuth with a different scope
+      responses:
+        200:
+          description: (OK) La informacion del cliente se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoBeneficiariosGet'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /{idCliente}/saldo:
+    get:
+      tags:
+      - usuarios
+      summary: Obtiene informacion de los Usuarios
+      parameters:
+      - name: idCliente
+        in: path
+        description: Identificador del cliente a obtener
+        required: true
+        schema:
+          type: string
+      security: 
+        - OAuth2: [admin]   # Use OAuth with a different scope
+      responses:
+        200:
+          description: (OK) La informacion del cliente se obtuvo correctamente
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ExitoSaldoGet'
+
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
