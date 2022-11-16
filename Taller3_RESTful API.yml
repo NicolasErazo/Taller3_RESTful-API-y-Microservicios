@@ -92,13 +92,12 @@ security:
       - read
       - write    
 
-
 tags:
   - name: usuarios
     description: Este endpoint maneja toda la informacion relacionada con la informacion de los Usuarios.
     
 paths:
-  /:
+  /usuarios:
     get:
       tags:
       - usuarios
